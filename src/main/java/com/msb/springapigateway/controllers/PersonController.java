@@ -18,7 +18,7 @@ import com.msb.springapigateway.data.vo.v2.PersonVOV2;
 import com.msb.springapigateway.services.PersonService;
 
 @RestController
-@RequestMapping("/persons")
+@RequestMapping("/api/v1/person")
 public class PersonController {
 
   @Autowired
