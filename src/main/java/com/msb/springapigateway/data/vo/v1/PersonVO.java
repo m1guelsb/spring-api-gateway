@@ -2,6 +2,9 @@ package com.msb.springapigateway.data.vo.v1;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({ "id", "firstName", "lastName", "address", "gender" })
 public class PersonVO implements Serializable {
 
   private Long id;
