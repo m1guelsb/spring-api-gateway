@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.msb.springapigateway.data.vo.v1.PersonVO;
+import com.msb.springapigateway.data.vo.v2.PersonVOV2;
 import com.msb.springapigateway.exceptions.ResourceNotFoundException;
 import com.msb.springapigateway.mapper.DozerMapper;
+import com.msb.springapigateway.mapper.custom.PersonMapper;
 import com.msb.springapigateway.models.Person;
 import com.msb.springapigateway.repositories.PersonRepository;
 
@@ -17,6 +19,9 @@ import com.msb.springapigateway.repositories.PersonRepository;
 public class PersonService {
   @Autowired
   PersonRepository repository;
+
+  @Autowired
+  PersonMapper mapper;
 
   private Logger logger = Logger.getLogger(PersonService.class.getName());
 
@@ -45,6 +50,15 @@ public class PersonService {
     return savedPersonVO;
   }
 
+  public PersonVOV2 createV2(PersonVOV2 personVOV2) {
+    logger.info("Creating one Person V2");
+
+    var entity = mapper.convertVOToEntity(personVOV2);
+
+    return mapper.convertEntityToVO(repository.save(entity));
+
+  }
+
   public PersonVO update(PersonVO personVO) {
     logger.info("Updating one Person");
 
@@ -56,9 +70,8 @@ public class PersonService {
     entity.setAddress(personVO.getAddress());
     entity.setGender(personVO.getGender());
 
-    var savedPersonVO = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
+    return DozerMapper.parseObject(repository.save(entity), PersonVO.class);
 
-    return savedPersonVO;
   }
 
   public ResponseEntity<?> delete(Long id) {
