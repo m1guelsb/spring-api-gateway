@@ -13,6 +13,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.msb.springapigateway.controllers.PersonController;
 import com.msb.springapigateway.data.vo.v1.PersonVO;
 import com.msb.springapigateway.data.vo.v2.PersonVOV2;
+import com.msb.springapigateway.exceptions.RequiredObjectIsNullException;
 import com.msb.springapigateway.exceptions.ResourceNotFoundException;
 import com.msb.springapigateway.mapper.DozerMapper;
 import com.msb.springapigateway.mapper.custom.PersonMapper;
@@ -57,6 +58,9 @@ public class PersonService {
   }
 
   public PersonVO create(PersonVO personVO) {
+    if (personVO == null)
+      throw new RequiredObjectIsNullException();
+
     logger.info("Creating one Person");
 
     var entity = DozerMapper.parseObject(personVO, Person.class);
@@ -68,16 +72,10 @@ public class PersonService {
     return vo;
   }
 
-  // public PersonVOV2 createV2(PersonVOV2 personVOV2) {
-  // logger.info("Creating one Person V2");
-
-  // var entity = mapper.convertVOToEntity(personVOV2);
-
-  // return mapper.convertEntityToVO(repository.save(entity));
-
-  // }
-
   public PersonVO update(PersonVO personVO) {
+    if (personVO == null)
+      throw new RequiredObjectIsNullException();
+
     logger.info("Updating one Person");
 
     Person entity = repository.findById(personVO.getKey())
@@ -103,5 +101,14 @@ public class PersonService {
 
     repository.delete(entity);
     return ResponseEntity.noContent().build();
+  }
+
+  public PersonVOV2 createV2(PersonVOV2 personVOV2) {
+    logger.info("Creating one Person V2");
+
+    var entity = mapper.convertVOToEntity(personVOV2);
+
+    return mapper.convertEntityToVO(repository.save(entity));
+
   }
 }
