@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/api/v1/person")
+@RequestMapping("/api/v1/persons")
 @Tag(name = "Person", description = "manage persons")
 public class PersonController {
 
