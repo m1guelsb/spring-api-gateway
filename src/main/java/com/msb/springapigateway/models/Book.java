@@ -34,12 +34,7 @@ public class Book implements Serializable {
   @Column(nullable = false, length = 250)
   private String title;
 
-  public Book(Long id, String author, Date launchDate, Double price, String title) {
-    this.id = id;
-    this.author = author;
-    this.launchDate = launchDate;
-    this.price = price;
-    this.title = title;
+  public Book() {
   }
 
   public Long getId() {
