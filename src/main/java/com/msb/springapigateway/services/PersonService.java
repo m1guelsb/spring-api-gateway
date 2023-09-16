@@ -12,11 +12,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.msb.springapigateway.controllers.PersonController;
 import com.msb.springapigateway.data.vo.v1.PersonVO;
-import com.msb.springapigateway.data.vo.v2.PersonVOV2;
 import com.msb.springapigateway.exceptions.RequiredObjectIsNullException;
 import com.msb.springapigateway.exceptions.ResourceNotFoundException;
 import com.msb.springapigateway.mapper.DozerMapper;
-import com.msb.springapigateway.mapper.custom.PersonMapper;
 import com.msb.springapigateway.models.Person;
 import com.msb.springapigateway.repositories.PersonRepository;
 
@@ -26,9 +24,6 @@ public class PersonService {
 
   @Autowired
   PersonRepository repository;
-
-  @Autowired
-  PersonMapper mapper;
 
   private Logger logger = Logger.getLogger(PersonService.class.getName());
 
@@ -103,12 +98,4 @@ public class PersonService {
     return ResponseEntity.noContent().build();
   }
 
-  public PersonVOV2 createV2(PersonVOV2 personVOV2) {
-    logger.info("Creating one Person V2");
-
-    var entity = mapper.convertVOToEntity(personVOV2);
-
-    return mapper.convertEntityToVO(repository.save(entity));
-
-  }
 }

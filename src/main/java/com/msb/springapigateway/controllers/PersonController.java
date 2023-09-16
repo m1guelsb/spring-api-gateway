@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.msb.springapigateway.data.vo.v1.PersonVO;
-import com.msb.springapigateway.data.vo.v2.PersonVOV2;
 import com.msb.springapigateway.services.PersonService;
 import com.msb.springapigateway.util.MediaType;
 
@@ -72,13 +71,6 @@ public class PersonController {
           MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
   public PersonVO create(@RequestBody PersonVO personVO) {
     return service.create(personVO);
-  }
-
-  @PostMapping(value = "/v2", consumes = { MediaType.APPLICATION_JSON,
-      MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, produces = {
-          MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-  public PersonVOV2 createV2(@RequestBody PersonVOV2 personVOV2) {
-    return service.createV2(personVOV2);
   }
 
   @Operation(summary = "Updates a person", tags = { "Person" }, responses = {
