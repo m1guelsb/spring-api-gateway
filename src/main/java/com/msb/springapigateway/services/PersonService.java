@@ -67,13 +67,13 @@ public class PersonService {
     return vo;
   }
 
-  public PersonVO update(PersonVO personVO) {
+  public PersonVO update(Long id, PersonVO personVO) {
     if (personVO == null)
       throw new RequiredObjectIsNullException();
 
     logger.info("Updating one Person");
 
-    Person entity = repository.findById(personVO.getKey())
+    Person entity = repository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(notFoundMessage));
 
     entity.setFirstName(personVO.getFirstName());

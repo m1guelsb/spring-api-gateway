@@ -80,12 +80,12 @@ public class PersonController {
       @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
       @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
   })
-  @PutMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
+  @PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
       MediaType.APPLICATION_YML }, produces = {
           MediaType.APPLICATION_JSON,
           MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-  public PersonVO update(@RequestBody PersonVO personVO) {
-    return service.update(personVO);
+  public PersonVO update(@PathVariable Long id, @RequestBody PersonVO personVO) {
+    return service.update(id, personVO);
   }
 
   @Operation(summary = "Deletes a person", tags = { "Person" }, responses = {

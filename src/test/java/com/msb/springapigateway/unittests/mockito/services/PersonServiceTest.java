@@ -111,7 +111,7 @@ class PersonServicesTest {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
 		when(repository.save(entity)).thenReturn(persisted);
 
-		var result = service.update(vo);
+		var result = service.update(vo.getKey(), vo);
 
 		assertNotNull(result);
 		assertNotNull(result.getKey());
@@ -127,7 +127,7 @@ class PersonServicesTest {
 	@Test
 	void testUpdateWithNullPerson() {
 		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
-			service.update(null);
+			service.update(null, null);
 		});
 
 		String expectedMessage = "It is not allowed to persist a null object";
