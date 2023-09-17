@@ -14,9 +14,8 @@ import org.testcontainers.lifecycle.Startables;
 @ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
 public class AbstractIntegrationTest {
 
-  public class Initializer implements
+  static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-      ApplicationContextInitializer<ConfigurableApplicationContext> {
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
 
     private static void startContainers() {
@@ -35,9 +34,10 @@ public class AbstractIntegrationTest {
     public void initialize(ConfigurableApplicationContext applicationContext) {
       startContainers();
       ConfigurableEnvironment environment = applicationContext.getEnvironment();
-      MapPropertySource testContainers = new MapPropertySource("testcontainers", (Map) createConnectionConfiguration());
-
-      environment.getPropertySources().addFirst(testContainers);
+      MapPropertySource testcontainers = new MapPropertySource(
+          "testcontainers",
+          (Map) createConnectionConfiguration());
+      environment.getPropertySources().addFirst(testcontainers);
     }
   }
 }
