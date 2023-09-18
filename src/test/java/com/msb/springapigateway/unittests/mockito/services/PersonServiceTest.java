@@ -25,7 +25,7 @@ import com.msb.springapigateway.unittests.mapper.mocks.MockPerson;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class PersonServicesTest {
+class PersonServiceTest {
 
 	MockPerson input;
 

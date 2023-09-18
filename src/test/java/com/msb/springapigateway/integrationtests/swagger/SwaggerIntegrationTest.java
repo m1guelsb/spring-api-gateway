@@ -4,14 +4,15 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.msb.springapigateway.config.TestConfigs;
+import com.msb.springapigateway.configs.TestConfigs;
 import com.msb.springapigateway.integrationtests.testcontainers.AbstractIntegrationTest;
 
-// @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class SwaggerIntegrationTest extends AbstractIntegrationTest {
 
-  // @Test
+  @Test
   void shouldDisplaySwaggerUiPage() {
     var content = given()
         .basePath("/swagger-ui/index.html")
