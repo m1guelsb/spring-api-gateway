@@ -1,4 +1,4 @@
-package com.msb.springapigateway.securityJwt;
+package com.msb.springapigateway.security.jwt;
 
 import java.util.Base64;
 import java.util.Date;
