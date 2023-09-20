@@ -18,8 +18,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msb.springapigateway.configs.TestConfigs;
+import com.msb.springapigateway.data.vo.v1.SignedDto;
 import com.msb.springapigateway.integrationtests.testcontainers.AbstractIntegrationTest;
 import com.msb.springapigateway.integrationtests.vo.PersonVO;
+import com.msb.springapigateway.integrationtests.vo.SignInDto;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -47,19 +49,41 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
   @Test
   @Order(1)
-  void testCreate() throws JsonMappingException, JsonProcessingException {
-    mockPerson();
+  void authorization() throws JsonMappingException, JsonProcessingException {
+    SignInDto user = new SignInDto("m1guelsb", "123");
+
+    var accessToken = given()
+        .basePath("/api/v1/auth/signin")
+        .port(TestConfigs.SERVER_PORT)
+        .contentType(TestConfigs.CONTENT_TYPE_JSON)
+        .body(user)
+        .when()
+        .post()
+        .then()
+        .statusCode(200)
+        .extract()
+        .body()
+        .as(SignedDto.class).accessToken();
 
     specification = new RequestSpecBuilder()
-        .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WEB_DEV)
+        .addHeader(
+            TestConfigs.HEADER_AUTHORIZATION, "Bearer " + accessToken)
         .setBasePath("/api/v1/persons")
         .setPort(TestConfigs.SERVER_PORT)
         .addFilter(new RequestLoggingFilter(LogDetail.ALL))
         .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
         .build();
+  }
+
+  @Test
+  @Order(2)
+  void testCreate() throws JsonMappingException, JsonProcessingException {
+    mockPerson();
 
     var content = given().spec(specification)
         .contentType(TestConfigs.CONTENT_TYPE_JSON)
+        .header(
+            TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WEB_DEV)
         .body(person)
         .when()
         .post()
@@ -89,20 +113,14 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
   }
 
   @Test
-  @Order(2)
+  @Order(3)
   void testFindById() throws JsonMappingException, JsonProcessingException {
     mockPerson();
 
-    specification = new RequestSpecBuilder()
-        .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WEB_DEV)
-        .setBasePath("/api/v1/persons")
-        .setPort(TestConfigs.SERVER_PORT)
-        .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-        .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-        .build();
-
     var content = given().spec(specification)
         .contentType(TestConfigs.CONTENT_TYPE_JSON)
+        .header(
+            TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WEB_DEV)
         .pathParam("id", person.getId())
         .when()
         .get("{id}")

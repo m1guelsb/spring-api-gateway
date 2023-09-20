@@ -31,6 +31,18 @@ public class AuthController {
   @Autowired
   private TokenProvider tokenService;
 
+  @Operation(summary = "Sign up user")
+  @PostMapping("/signup")
+  public ResponseEntity<SignedDto> register(@RequestBody @Valid SignUpDto data) {
+    var userDetails = service.signUp(data);
+
+    var accessToken = tokenService.generateAccessToken((User) userDetails);
+    var refreshToken = tokenService.generateRefreshToken((User) userDetails);
+
+    return ResponseEntity.ok(new SignedDto(accessToken, refreshToken, userDetails.getUsername()));
+
+  }
+
   @Operation(summary = "Authenticate user with token")
   @PostMapping("/signin")
   public ResponseEntity<SignedDto> login(@RequestBody @Valid SignInDto data) {
@@ -44,15 +56,4 @@ public class AuthController {
     return ResponseEntity.ok(new SignedDto(accessToken, refreshToken, authUser.getName()));
   }
 
-  @Operation(summary = "Sign up user")
-  @PostMapping("/signup")
-  public ResponseEntity<SignedDto> register(@RequestBody @Valid SignUpDto data) {
-    var userDetails = service.signUp(data);
-
-    var accessToken = tokenService.generateAccessToken((User) userDetails);
-    var refreshToken = tokenService.generateRefreshToken((User) userDetails);
-
-    return ResponseEntity.ok(new SignedDto(accessToken, refreshToken, userDetails.getUsername()));
-
-  }
 }
