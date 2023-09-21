@@ -1,9 +1,13 @@
 package com.msb.springapigateway.services;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +29,33 @@ public class PersonService {
   @Autowired
   PersonRepository repository;
 
+  @Autowired
+  PagedResourcesAssembler<PersonVO> assembler;
+
   private Logger logger = Logger.getLogger(PersonService.class.getName());
 
-  public List<PersonVO> findAll() {
+  public PagedModel<EntityModel<PersonVO>> findAll(Pageable pageable) {
     logger.info("Finding all Person");
 
-    var persons = DozerMapper.parseListObjects(repository.findAll(), PersonVO.class);
+    var personPage = repository.findAll(pageable);
 
-    persons.stream().forEach(
+    // transform entity to dto
+    var personVosPage = personPage.map(person -> DozerMapper.parseObject(person, PersonVO.class));
+
+    // add person hateos
+    var personPagesWithHateos = personVosPage.map(
         person -> person.add(linkTo(methodOn(PersonController.class).findById(person.getKey())).withSelfRel()));
 
-    return persons;
+    // add pagination hateos
+    Link link = linkTo(
+        methodOn(PersonController.class)
+            .findAll(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                "asc"))
+        .withSelfRel();
+
+    return assembler.toModel(personPagesWithHateos, link);
   }
 
   public PersonVO findById(Long id) {
