@@ -13,7 +13,7 @@ import com.msb.springapigateway.integrationtests.testcontainers.AbstractIntegrat
 class SwaggerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
-  void shouldDisplaySwaggerUiPage() {
+  void should_display_swagger_page() {
     var content = given()
         .basePath("/swagger-ui/index.html")
         .port(TestConfigs.SERVER_PORT)

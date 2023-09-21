@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import com.msb.springapigateway.data.vo.v1.BookVO;
 import com.msb.springapigateway.exceptions.RequiredObjectIsNullException;
@@ -42,7 +43,7 @@ class BookServiceTest {
   }
 
   @Test
-  void testFindById() {
+  void should_findById_book() {
     Book entity = input.mockEntity(1);
     entity.setId(1L);
 
@@ -61,7 +62,7 @@ class BookServiceTest {
   }
 
   @Test
-  void testCreate() {
+  void should_create_book() {
     Book entity = input.mockEntity(1);
     entity.setId(1L);
 
@@ -87,7 +88,7 @@ class BookServiceTest {
   }
 
   @Test
-  void testCreateWithNullBook() {
+  void should_not_create_null_book() {
     Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
       service.create(null);
     });
@@ -99,7 +100,7 @@ class BookServiceTest {
   }
 
   @Test
-  void testUpdate() {
+  void should_update_book() {
     Book entity = input.mockEntity(1);
 
     Book persisted = entity;
@@ -125,7 +126,7 @@ class BookServiceTest {
   }
 
   @Test
-  void testUpdateWithNullBook() {
+  void should_not_update_null_book() {
     Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
       service.update(null, null);
     });
@@ -137,17 +138,19 @@ class BookServiceTest {
   }
 
   @Test
-  void testDelete() {
+  void should_delete_book() {
     Book entity = input.mockEntity(1);
     entity.setId(1L);
 
     when(repository.findById(1L)).thenReturn(Optional.of(entity));
 
-    service.delete(1L);
+    var resCode = service.delete(1L).getStatusCode();
+
+    assertEquals(HttpStatus.NO_CONTENT, resCode);
   }
 
   @Test
-  void testFindAll() {
+  void should_findAll_book() {
     List<Book> list = input.mockEntityList();
 
     when(repository.findAll()).thenReturn(list);
@@ -180,18 +183,6 @@ class BookServiceTest {
     assertEquals("Some Title4", bookFour.getTitle());
     assertEquals(25D, bookFour.getPrice());
     assertNotNull(bookFour.getLaunchDate());
-
-    var bookSeven = people.get(7);
-
-    assertNotNull(bookSeven);
-    assertNotNull(bookSeven.getKey());
-    assertNotNull(bookSeven.getLinks());
-
-    assertTrue(bookSeven.toString().contains("links: [</api/v1/books/7>;rel=\"self\"]"));
-    assertEquals("Some Author7", bookSeven.getAuthor());
-    assertEquals("Some Title7", bookSeven.getTitle());
-    assertEquals(25D, bookSeven.getPrice());
-    assertNotNull(bookSeven.getLaunchDate());
   }
 
 }

@@ -13,6 +13,12 @@ import com.msb.springapigateway.integrationtests.testcontainers.AbstractIntegrat
 import com.msb.springapigateway.integrationtests.vo.SignInDto;
 import com.msb.springapigateway.models.enums.UserRole;
 
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.specification.RequestSpecification;
+
 import static io.restassured.RestAssured.given;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -31,7 +37,7 @@ public class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(0)
-  void testSignUp() throws JsonMappingException, JsonProcessingException {
+  void should_signup() throws JsonMappingException, JsonProcessingException {
 
     SignUpDto user = new SignUpDto("m1guelsb", "123", UserRole.ADMIN);
 
@@ -55,7 +61,7 @@ public class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(1)
-  void testSignin() throws JsonMappingException, JsonProcessingException {
+  void should_signin() throws JsonMappingException, JsonProcessingException {
 
     SignInDto user = new SignInDto("m1guelsb", "123");
 
@@ -76,4 +82,24 @@ public class AuthControllerTest extends AbstractIntegrationTest {
     assertNotNull(signedDto.refreshToken());
 
   }
+
+  @Test
+  @Order(2)
+  public void should_deny_access() throws JsonMappingException, JsonProcessingException {
+
+    RequestSpecification specificationWithoutToken = new RequestSpecBuilder()
+        .setBasePath("/v1/api/persons")
+        .setPort(TestConfigs.SERVER_PORT)
+        .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+        .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+        .build();
+
+    given().spec(specificationWithoutToken)
+        .contentType(TestConfigs.CONTENT_TYPE_JSON)
+        .when()
+        .get()
+        .then()
+        .statusCode(403);
+  }
+
 }
