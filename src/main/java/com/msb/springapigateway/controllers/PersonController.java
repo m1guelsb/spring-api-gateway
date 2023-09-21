@@ -108,8 +108,8 @@ public class PersonController {
       @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
   })
   @DeleteMapping(value = "/{id}")
-  public void delete(@PathVariable(value = "id") Long id) {
-    service.delete(id);
+  public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+    return service.delete(id);
   }
 
 }
