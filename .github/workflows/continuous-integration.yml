@@ -36,6 +36,8 @@ jobs:
 
     - name: Push to Docker Hub Container Registry
       run: |
+        docker pull m1guelsb/spring-api:latest
+        
         docker tag ${{  secrets.DOCKER_USERNAME  }}/spring-api ${{  secrets.DOCKER_USERNAME  }}/spring-api:${{  github.run_id  }}
 
         docker push ${{  secrets.DOCKER_USERNAME  }}/spring-api:${{  github.run_id  }}
