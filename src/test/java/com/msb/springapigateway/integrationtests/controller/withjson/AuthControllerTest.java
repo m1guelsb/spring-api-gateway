@@ -39,7 +39,7 @@ public class AuthControllerTest extends AbstractIntegrationTest {
   @Order(0)
   void should_signup() throws JsonMappingException, JsonProcessingException {
 
-    SignUpDto user = new SignUpDto("m1guelsb", "123", UserRole.ADMIN);
+    SignUpDto user = new SignUpDto("m1guelsb-auth-test", "123", UserRole.ADMIN);
 
     signedDto = given()
         .basePath("/api/v1/auth/signup")
@@ -63,7 +63,7 @@ public class AuthControllerTest extends AbstractIntegrationTest {
   @Order(1)
   void should_signin() throws JsonMappingException, JsonProcessingException {
 
-    SignInDto user = new SignInDto("m1guelsb", "123");
+    SignInDto user = new SignInDto("m1guelsb-auth-test", "123");
 
     signedDto = given()
         .basePath("/api/v1/auth/signin")

@@ -1,3 +1,5 @@
+server:
+  port: 8080
 cors:
   originPatterns: "http://localhost:3000"
 security:
@@ -7,7 +9,7 @@ security:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/dev-db
+    url: jdbc:mysql://localhost:3306/spring-api-db
     username: root
     password: root
   jpa:
@@ -20,11 +22,7 @@ spring:
 springdoc:
   pathsToMatch: /api/v1/**
   swagger-ui:
-    use-root-path: true
-server:
-  error:
-    include-stacktrace: never
-    include-message: never
+    use-root-path: true  
     
 
 
