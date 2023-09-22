@@ -20,8 +20,6 @@ services:
   spring-api:
     image: m1guelsb/spring-api
     restart: always
-    build: /home/m1guelsb/Projects/backend/spring-api-gateway/
-    working_dir: /spring-api-gateway
     environment:
       TZ: America/Sao_Paulo
       SPRING.DATASOURCE.URL: jdbc:mysql://mysql-db:3306/spring-api-db
